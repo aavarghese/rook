@@ -190,12 +190,12 @@ data:
   # The default version of CSI supported by Rook will be started. To change the version
   # of the CSI driver to something other than what is officially supported, change
   # these images to the desired release of the CSI driver.
-  # ROOK_CSI_CEPH_IMAGE: "quay.io/cephcsi/cephcsi:v3.8.0"
-  # ROOK_CSI_REGISTRAR_IMAGE: "registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.7.0"
-  # ROOK_CSI_RESIZER_IMAGE: "registry.k8s.io/sig-storage/csi-resizer:v1.7.0"
-  # ROOK_CSI_PROVISIONER_IMAGE: "registry.k8s.io/sig-storage/csi-provisioner:v3.4.0"
-  # ROOK_CSI_SNAPSHOTTER_IMAGE: "registry.k8s.io/sig-storage/csi-snapshotter:v6.2.1"
-  # ROOK_CSI_ATTACHER_IMAGE: "registry.k8s.io/sig-storage/csi-attacher:v4.1.0"
+  ROOK_CSI_CEPH_IMAGE: "br.icr.io/rhel/cephcsi:v3.8.0"
+  ROOK_CSI_REGISTRAR_IMAGE: "br.icr.io/rhel/csi-node-driver-registrar:v2.7.0"
+  ROOK_CSI_RESIZER_IMAGE: "br.icr.io/rhel/csi-resizer:v1.7.0"
+  ROOK_CSI_PROVISIONER_IMAGE: "br.icr.io/rhel/csi-provisioner:v3.4.0"
+  ROOK_CSI_SNAPSHOTTER_IMAGE: "br.icr.io/rhel/csi-snapshotter:v6.2.1"
+  ROOK_CSI_ATTACHER_IMAGE: "br.icr.io/rhel/csi-attacher:v4.1.0"
 
   # (Optional) set user created priorityclassName for csi plugin pods.
   CSI_PLUGIN_PRIORITY_CLASSNAME: "system-node-critical"
@@ -262,10 +262,11 @@ data:
   # (Optional) CephCSI provisioner tolerations list(applied to both CephFS and RBD provisioner).
   # Put here list of taints you want to tolerate in YAML format.
   # CSI provisioner would be best to start on the same nodes as other ceph daemons.
-  # CSI_PROVISIONER_TOLERATIONS: |
-  #   - effect: NoSchedule
-  #     key: node-role.kubernetes.io/control-plane
-  #     operator: Exists
+  CSI_PROVISIONER_TOLERATIONS: |
+    - effect: NoSchedule
+      key: store
+      value: ceph
+      operator: Exists
   #   - effect: NoExecute
   #     key: node-role.kubernetes.io/etcd
   #     operator: Exists
@@ -274,10 +275,11 @@ data:
   # (Optional) CephCSI plugin tolerations list(applied to both CephFS and RBD plugin).
   # Put here list of taints you want to tolerate in YAML format.
   # CSI plugins need to be started on all the nodes where the clients need to mount the storage.
-  # CSI_PLUGIN_TOLERATIONS: |
-  #   - effect: NoSchedule
-  #     key: node-role.kubernetes.io/control-plane
-  #     operator: Exists
+  CSI_PLUGIN_TOLERATIONS: |
+    - effect: NoSchedule
+      key: store
+      value: ceph
+      operator: Exists
   #   - effect: NoExecute
   #     key: node-role.kubernetes.io/etcd
   #     operator: Exists
@@ -287,51 +289,57 @@ data:
   # (Optional) CephCSI RBD provisioner tolerations list(if specified, overrides CSI_PROVISIONER_TOLERATIONS).
   # Put here list of taints you want to tolerate in YAML format.
   # CSI provisioner would be best to start on the same nodes as other ceph daemons.
-  # CSI_RBD_PROVISIONER_TOLERATIONS: |
-  #   - key: node.rook.io/rbd
-  #     operator: Exists
+  CSI_RBD_PROVISIONER_TOLERATIONS: |
+    - key: store
+      value: ceph
+      operator: Exists
   # (Optional) CephCSI RBD plugin NodeAffinity(if specified, overrides CSI_PLUGIN_NODE_AFFINITY).
   # CSI_RBD_PLUGIN_NODE_AFFINITY: "role=rbd-node"
   # (Optional) CephCSI RBD plugin tolerations list(if specified, overrides CSI_PLUGIN_TOLERATIONS).
   # Put here list of taints you want to tolerate in YAML format.
   # CSI plugins need to be started on all the nodes where the clients need to mount the storage.
-  # CSI_RBD_PLUGIN_TOLERATIONS: |
-  #   - key: node.rook.io/rbd
-  #     operator: Exists
+  CSI_RBD_PLUGIN_TOLERATIONS: |
+    - key: store
+      value: ceph
+      operator: Exists
 
   # (Optional) CephCSI CephFS provisioner NodeAffinity(if specified, overrides CSI_PROVISIONER_NODE_AFFINITY).
   # CSI_CEPHFS_PROVISIONER_NODE_AFFINITY: "role=cephfs-node"
   # (Optional) CephCSI CephFS provisioner tolerations list(if specified, overrides CSI_PROVISIONER_TOLERATIONS).
   # Put here list of taints you want to tolerate in YAML format.
   # CSI provisioner would be best to start on the same nodes as other ceph daemons.
-  # CSI_CEPHFS_PROVISIONER_TOLERATIONS: |
-  #   - key: node.rook.io/cephfs
-  #     operator: Exists
+  CSI_CEPHFS_PROVISIONER_TOLERATIONS: |
+    - key: store
+      value: ceph
+      operator: Exists
   # (Optional) CephCSI CephFS plugin NodeAffinity(if specified, overrides CSI_PLUGIN_NODE_AFFINITY).
   # CSI_CEPHFS_PLUGIN_NODE_AFFINITY: "role=cephfs-node"
   # (Optional) CephCSI CephFS plugin tolerations list(if specified, overrides CSI_PLUGIN_TOLERATIONS).
   # Put here list of taints you want to tolerate in YAML format.
   # CSI plugins need to be started on all the nodes where the clients need to mount the storage.
-  # CSI_CEPHFS_PLUGIN_TOLERATIONS: |
-  #   - key: node.rook.io/cephfs
-  #     operator: Exists
+  CSI_CEPHFS_PLUGIN_TOLERATIONS: |
+    - key: store
+      value: ceph
+      operator: Exists
 
   # (Optional) CephCSI NFS provisioner NodeAffinity (overrides CSI_PROVISIONER_NODE_AFFINITY).
   # CSI_NFS_PROVISIONER_NODE_AFFINITY: "role=nfs-node"
   # (Optional) CephCSI NFS provisioner tolerations list (overrides CSI_PROVISIONER_TOLERATIONS).
   # Put here list of taints you want to tolerate in YAML format.
   # CSI provisioner would be best to start on the same nodes as other ceph daemons.
-  # CSI_NFS_PROVISIONER_TOLERATIONS: |
-  #   - key: node.rook.io/nfs
-  #     operator: Exists
+  CSI_NFS_PROVISIONER_TOLERATIONS: |
+    - key: store
+      value: ceph
+      operator: Exists
   # (Optional) CephCSI NFS plugin NodeAffinity (overrides CSI_PLUGIN_NODE_AFFINITY).
   # CSI_NFS_PLUGIN_NODE_AFFINITY: "role=nfs-node"
   # (Optional) CephCSI NFS plugin tolerations list (overrides CSI_PLUGIN_TOLERATIONS).
   # Put here list of taints you want to tolerate in YAML format.
   # CSI plugins need to be started on all the nodes where the clients need to mount the storage.
-  # CSI_NFS_PLUGIN_TOLERATIONS: |
-  #   - key: node.rook.io/nfs
-  #     operator: Exists
+  CSI_NFS_PLUGIN_TOLERATIONS: |
+    - key: store
+      value: ceph
+      operator: Exists
 
   # (Optional) CEPH CSI RBD provisioner resource requirement list, Put here list of resource
   # requests and limits you want to apply for provisioner pod
@@ -631,14 +639,21 @@ spec:
         app: rook-ceph-operator
     spec:
       serviceAccountName: rook-ceph-system
+      tolerations:
+      - key: "store"
+        operator: "Equal"
+        value: "ceph"
+        effect: "NoSchedule"
+      imagePullSecrets:
+        - name: all-icr-io
       containers:
         - name: rook-ceph-operator
-          image: rook/ceph:master
+          image: "br.icr.io/rhel/ceph:v1.11.5"
           args: ["ceph", "operator"]
           securityContext:
             runAsNonRoot: true
-            runAsUser: 2016
-            runAsGroup: 2016
+            runAsUser: 2008
+            runAsGroup: 1032
           volumeMounts:
             - mountPath: /var/lib/rook
               name: rook-config
