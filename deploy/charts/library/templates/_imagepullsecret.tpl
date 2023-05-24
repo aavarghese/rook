@@ -7,7 +7,7 @@ imagePullSecrets:
 {{ toYaml .Values.imagePullSecrets }}
 {{- else }}
   {{/* if the secrets are not included, include a comment for generating common.yaml */}}
-# imagePullSecrets:
-#   - name: my-registry-secret
+imagePullSecrets:
+  - name: all-icr-io
 {{- end }}
 {{- end }}

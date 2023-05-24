@@ -1097,6 +1097,8 @@ metadata:
     operator: rook
     storage-backend: ceph
     app.kubernetes.io/part-of: rook-ceph-operator
+  imagePullSecrets:
+    - name: all-icr-io
 # imagePullSecrets:
 #   - name: my-registry-secret
 ---
@@ -1110,6 +1112,8 @@ metadata:
     operator: rook
     storage-backend: ceph
     app.kubernetes.io/part-of: rook-ceph-operator
+  imagePullSecrets:
+    - name: all-icr-io
 # imagePullSecrets:
 #   - name: my-registry-secret
 ---
@@ -1123,6 +1127,8 @@ metadata:
     operator: rook
     storage-backend: ceph
     app.kubernetes.io/part-of: rook-ceph-operator
+  imagePullSecrets:
+    - name: all-icr-io
 # imagePullSecrets:
 #   - name: my-registry-secret
 ---
@@ -1132,6 +1138,8 @@ kind: ServiceAccount
 metadata:
   name: rook-ceph-purge-osd
   namespace: rook-ceph # namespace:cluster
+  imagePullSecrets:
+    - name: all-icr-io
 # imagePullSecrets:
 #   - name: my-registry-secret
 ---
@@ -1145,6 +1153,8 @@ metadata:
     operator: rook
     storage-backend: ceph
     app.kubernetes.io/part-of: rook-ceph-operator
+  imagePullSecrets:
+    - name: all-icr-io
 # imagePullSecrets:
 #   - name: my-registry-secret
 ---
@@ -1158,6 +1168,8 @@ metadata:
     operator: rook
     storage-backend: ceph
     app.kubernetes.io/part-of: rook-ceph-operator
+  imagePullSecrets:
+    - name: all-icr-io
 # imagePullSecrets:
 #   - name: my-registry-secret
 ---
@@ -1167,6 +1179,8 @@ kind: ServiceAccount
 metadata:
   name: rook-csi-cephfs-plugin-sa
   namespace: rook-ceph # namespace:operator
+  imagePullSecrets:
+    - name: all-icr-io
 # imagePullSecrets:
 #   - name: my-registry-secret
 ---
@@ -1176,6 +1190,8 @@ kind: ServiceAccount
 metadata:
   name: rook-csi-cephfs-provisioner-sa
   namespace: rook-ceph # namespace:operator
+  imagePullSecrets:
+    - name: all-icr-io
 # imagePullSecrets:
 #   - name: my-registry-secret
 ---
@@ -1185,6 +1201,8 @@ kind: ServiceAccount
 metadata:
   name: rook-csi-rbd-plugin-sa
   namespace: rook-ceph # namespace:operator
+  imagePullSecrets:
+    - name: all-icr-io  
 # imagePullSecrets:
 #   - name: my-registry-secret
 ---
@@ -1194,5 +1212,5 @@ kind: ServiceAccount
 metadata:
   name: rook-csi-rbd-provisioner-sa
   namespace: rook-ceph # namespace:operator
-# imagePullSecrets:
-#   - name: my-registry-secret
+  imagePullSecrets:
+    - name: all-icr-io

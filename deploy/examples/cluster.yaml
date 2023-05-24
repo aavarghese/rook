@@ -21,7 +21,7 @@ spec:
     # versions running within the cluster. See tags available at https://hub.docker.com/r/ceph/ceph/tags/.
     # If you want to be more precise, you can always use a timestamp tag such quay.io/ceph/ceph:v17.2.6-20230410
     # This tag might not contain a new Ceph version, just security fixes from the underlying operating system, which will reduce vulnerabilities
-    image: quay.io/ceph/ceph:v17.2.6
+    image: "br.icr.io/rhel/ceph:v17.2.6"
     # Whether to allow unsupported versions of Ceph. Currently `pacific` and `quincy` are supported.
     # Future versions such as `reef` (v18) would require this to be set to `true`.
     # Do not set to true in production.
@@ -46,7 +46,7 @@ spec:
   mon:
     # Set the number of mons to be started. Generally recommended to be 3.
     # For highest availability, an odd number of mons should be specified.
-    count: 3
+    count: 1 # TODO: Ansu
     # The mons should be on unique nodes. For production, at least 3 nodes are recommended for this reason.
     # Mons should only be allowed on the same node for test environments where data loss is acceptable.
     allowMultiplePerNode: false
@@ -54,7 +54,7 @@ spec:
     # When higher availability of the mgr is needed, increase the count to 2.
     # In that case, one mgr will be active and one in standby. When Ceph updates which
     # mgr is active, Rook will update the mgr services to match the active mgr.
-    count: 2
+    count: 1 # TODO: Ansu
     allowMultiplePerNode: false
     modules:
       # Several modules should not need to be included in this list. The "dashboard" and "monitoring" modules
@@ -65,15 +65,15 @@ spec:
   dashboard:
     enabled: true
     # serve the dashboard under a subpath (useful when you are accessing the dashboard via a reverse proxy)
-    # urlPrefix: /ceph-dashboard
+    urlPrefix: /ceph-dashboard
     # serve the dashboard at the given port.
-    # port: 8443
+    port: 8443
     # serve the dashboard using SSL
     ssl: true
   # enable prometheus alerting for cluster
   monitoring:
     # requires Prometheus to be pre-installed
-    enabled: false
+    enabled: true
     # Whether to disable the metrics reported by Ceph. If false, the prometheus mgr module and Ceph exporter are enabled.
     # If true, the prometheus mgr module and Ceph exporter are both disabled. Default is false.
     metricsDisabled: false
@@ -86,7 +86,7 @@ spec:
       # you can set the "mounter: rbd-nbd" in the rbd storage class, or "mounter: fuse" in the cephfs storage class.
       # The nbd and fuse drivers are *not* recommended in production since restarting the csi driver pod will disconnect the volumes.
       encryption:
-        enabled: false
+        enabled: false # TODO Ansu
       # Whether to compress the data in transit across the wire. The default is false.
       # Requires Ceph Quincy (v17) or newer. Also see the kernel requirements above for encryption.
       compression:
@@ -157,8 +157,8 @@ spec:
   # To control where various services will be scheduled by kubernetes, use the placement configuration sections below.
   # The example under 'all' would have all services scheduled on kubernetes nodes labeled with 'role=storage-node' and
   # tolerate taints with a key of 'storage-node'.
-  # placement:
-  #   all:
+    placement:
+      all:
   #     nodeAffinity:
   #       requiredDuringSchedulingIgnoredDuringExecution:
   #         nodeSelectorTerms:
@@ -170,9 +170,11 @@ spec:
   #     podAffinity:
   #     podAntiAffinity:
   #     topologySpreadConstraints:
-  #     tolerations:
-  #     - key: storage-node
-  #       operator: Exists
+        tolerations: # TODO Ansu
+        - key: store
+          operator: Exists
+          value: ceph
+          effect: NoSchedule
   # The above placement information can also be specified for mon, osd, and mgr components
   #   mon:
   # Monitor deployments may contain an anti-affinity rule for avoiding monitor
