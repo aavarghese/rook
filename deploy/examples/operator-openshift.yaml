@@ -615,7 +615,7 @@ data:
 # The deployment for the rook operator
 # OLM: BEGIN OPERATOR DEPLOYMENT
 apiVersion: apps/v1
-kind: Deployment
+kind: Deployment # Ansu
 metadata:
   name: rook-ceph-operator
   namespace: rook-ceph # namespace:operator

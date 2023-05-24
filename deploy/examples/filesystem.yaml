@@ -61,9 +61,10 @@ spec:
       #          values:
       #          - mds-node
       #  topologySpreadConstraints:
-      #  tolerations:
-      #  - key: mds-node
-      #    operator: Exists
+      tolerations:
+      - key: store
+        value: ceph
+        operator: Exists
       #  podAffinity:
       podAntiAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
